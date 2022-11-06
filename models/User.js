@@ -22,6 +22,12 @@ const userSchema = mongoose.Schema(
                 type: String,
             },
         ],
+        qrGenerated: {
+            type: Date,
+        },
+        qrExpiry: {
+            type: Date,
+        },
         firstTime: {
             type: Boolean,
             default: true,

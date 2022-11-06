@@ -10,11 +10,10 @@ const labReportSchema = mongoose.Schema(
                 type: String,
             },
         },
-        testName: [
-            {
-                type: String,
-            },
-        ],
+        testName: {
+            type: String,
+        },
+
         user: {
             type: mongoose.Schema.ObjectId,
             ref: "User",

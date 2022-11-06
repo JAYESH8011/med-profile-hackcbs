@@ -14,6 +14,7 @@ const config = {
     secret: "LONG_RANDOM_STRING",
 }
 const userRoute = require("./routes/userRoute")
+const homeRoute = require("./routes/homeRoute")
 const cloudinary = require("cloudinary").v2
 
 cloudinary.config({
@@ -39,5 +40,6 @@ app.use(auth(config))
 
 //routes
 app.use("/", userRoute)
+app.use("/", homeRoute)
 
 module.exports = app

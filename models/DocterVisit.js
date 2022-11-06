@@ -5,11 +5,10 @@ const DoctorVisitSchema = mongoose.Schema(
         diaseases: {
             type: String,
         },
-        medicine: [
-            {
-                type: String,
-            },
-        ],
+        medicine: {
+            type: String,
+        },
+
         reasonOfVisit: {
             type: String,
         },
@@ -22,14 +21,12 @@ const DoctorVisitSchema = mongoose.Schema(
             },
         },
         isRecovered: {
-            type: Boolean,
-            default: false,
+            type: String,
+            default: "false",
         },
-        sideEffects: [
-            {
-                type: String,
-            },
-        ],
+        sideEffects: {
+            type: String,
+        },
         user: {
             type: mongoose.Schema.ObjectId,
             ref: "User",

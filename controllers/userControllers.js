@@ -4,32 +4,12 @@ const LabReport = require("../models/labReport")
 const cloudinary = require("cloudinary").v2
 
 exports.updateDetails = async (req, res) => {
-    const user = await User.findOne({ email: req.oidc.user.email })
+    let user = await User.findOne({ email: req.oidc.user.email })
     if (!user) {
-        let user = await User.create({
+        user = await User.create({
             firstname: req.oidc.user.nickname,
             email: req.oidc.user.email,
         })
-    }
-    if (user.firstTime) {
-        const {
-            firstName,
-            lastName,
-            email,
-            address,
-            phoneNumber,
-            diaseases,
-            firstTime,
-        } = req.body
-        await user.save(
-            firstName,
-            lastName,
-            email,
-            address,
-            phoneNumber,
-            diaseases,
-            firstTime
-        )
     }
     res.json({
         status: "ok",
@@ -65,6 +45,8 @@ exports.firstTimeUpdate = async (req, res) => {
 }
 exports.addDoctorVisit = async (req, res) => {
     const user = await User.findOne({ email: req.oidc.user.email })
+    console.log(req.files)
+    console.log(req.body)
     const { photo } = req.files
     const result = await cloudinary.uploader.upload(photo.tempFilePath, {
         folder: "prescription",
@@ -75,10 +57,7 @@ exports.addDoctorVisit = async (req, res) => {
         prescription: { id: public_id, securedUrl: secure_url },
         user: user._id,
     })
-    res.json({
-        status: "ok",
-        doctorVisit,
-    })
+    res.redirect("/dashboard")
 }
 exports.addLabReport = async (req, res) => {
     const user = await User.findOne({ email: req.oidc.user.email })
@@ -92,10 +71,7 @@ exports.addLabReport = async (req, res) => {
         report: { id: public_id, securedUrl: secure_url },
         user: user._id,
     })
-    res.json({
-        status: "ok",
-        labReport,
-    })
+    res.redirect("/dashboard")
 }
 exports.updateDoctorVisit = async (req, res) => {
     const { oid } = req.body
@@ -120,4 +96,32 @@ exports.deleteLabReport = async (req, res) => {
     await cloudinary.uploader.destroy(labReport.report.id)
     await LabReport.deleteOne({ _id: oid })
     res.json({ status: "ok", labReport })
+}
+exports.getAllvisits = async (req, res) => {
+    const user = await User.findOne({ email: req.oidc.user.email })
+    const visit = await DoctorVisit.find({ user: user._id })
+    res.json({ status: "ok", visit })
+}
+exports.getAllLab = async (req, res) => {
+    const user = await User.findOne({ email: req.oidc.user.email })
+    const lab = await LabReport.find({ user: user._id })
+    res.json({ status: "ok", lab })
+}
+exports.qrGenerator = async (req, res) => {
+    const { expiryTime } = req.body
+    const user = await User.findOne({ email: req.oidc.user.email })
+    // await user.save({
+    //     qrGenerated: Date.now(),
+    //     qrExpiry: new Date(Date.now() + expiryTime * 60 * 1000),
+    // })
+    res.json({ status: "ok" })
+}
+exports.qrLink = async (req, res) => {
+    const { email } = req.params
+    const user = User.findOne({ email })
+    if (user.qrExpiry > Date.now()) {
+        return res.json({ status: "qr expires" })
+    }
+    const doctorVisit = DoctorVisit.find({ user: user._id })
+    res.json({ doctorVisit })
 }
