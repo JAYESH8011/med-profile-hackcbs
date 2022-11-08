@@ -10,4 +10,4 @@ The doctor would authorize prescriptions and medical reports on our app, and if 
 
 ## Tech Stack
 
-We mostly utilize javascript for both the frontend and the backend. For the front end, we use a template engine and server-side generation. For the backend, we use node js and express. For the database, we primarily use NoSQL databases like MongoDB. Finally, we use elastic search for searching and Auth0 for authentication.
+We mostly utilized javascript for both the frontend and the backend. For the front end, we used a template engine and server-side generatior. For the backend, we use node.js and express. For the database, we primarily use NoSQL databases like MongoDB. Finally, we use elastic search for searching and Auth0 for authentication.
